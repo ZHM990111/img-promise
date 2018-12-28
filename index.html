@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        img {
+            width: 300px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        const src = [
+            'https://img01.sogoucdn.com/net/a/04/link?url=http%3A%2F%2Fimg04.sogoucdn.com%2Fapp%2Fa%2F100520024%2F8a5cac4b4c8819b2b7b3014f952409be&appid=122',
+            'https://img04.sogoucdn.com/app/a/100520021/c4117e6229bdf64fef934bd715cefbcd',
+            'https://img04.sogoucdn.com/app/a/100520021/df53b973a491fcfde8c5ebc71e39dbf7',
+            'https://i03piccdn.sogoucdn.com/548ce394080eab36',
+            'https://img3.duitang.com/uploads/item/201605/10/20160510210001_Q38nw.thumb.700_0.jpeg'];
+
+
+        var  LoadImageAsync = (url)=>{
+            return new Promise((resolve, reject)=>{
+                var image = new Image();
+                image.onload = ()=>{
+                    resolve(image);
+                };
+                image.onerror =()=>{
+                    reject(new Error('not'));
+                };
+                  image.src = url;
+            });
+        }
+
+    
+  // 一.图片加载全部完成之后添加到dom中
+       let promises=src.map(item=>LoadImageAsync(item))
+          //1, async/awati实现
+        //    async function loadImgs(){
+        //        let img=[];
+        //        for (let i=0,len=promises.length; i<len; i++){
+        //            img.push(await promises[i])
+        //        }
+        //        img.forEach(item=>document.body.appendChild(item))
+        //    }
+        //    loadImgs()
+          //2 用 promise.all实现
+        //    Promise.all(promises).then(res=>{
+        //        res.forEach(v=>{
+        //            document.body.appendChild(v)
+        //        })
+        //    })
+         //3,用轮询的方法
+        // var arr = [];
+        // for (var i = 0; i < src.length; i++) {
+        //     let img = new Image();
+        //     img.src = src[i];
+        //     img.onload = () => {
+        //         arr.push(img);
+        //         if (src.length === arr.length) {
+        //             arr.forEach(v => {
+        //                 document.body.appendChild(v)
+        //             })
+        //         }
+        //     }
+        // }
+   // 二，谁先加载完谁添加到dom中
+        function loadImgAysnc(){
+            promises.forEach(async item=>{
+               let img = await item;
+               document.body.appendChild(img);
+            })
+        }
+        loadImgAysnc()
+    </script>
+</body>
+
+</html>
